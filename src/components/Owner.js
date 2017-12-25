@@ -2,12 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import OwnerList from '../components/OwnerList'
 import OwnerForm from '../components/OwnerForm'
-import { Route, Link } from 'react-router-dom';
-
-import logo from '../logo.svg';
-import '../App.css';
-
-const api_owner = "http://127.0.0.1:8000/api/owners/";
+import api from '../components/api'
 
 class Owner extends Component {
 	
@@ -20,7 +15,7 @@ class Owner extends Component {
   }
   
   componentDidMount() {
-	  axios.get(api_owner)
+	  api.ownerAll()
 	  .then(res => {
 		this.setState({
 		  owners: res.data
@@ -32,10 +27,7 @@ class Owner extends Component {
   
   handleOnAddOwner (event) {
     event.preventDefault();
-	axios.post(api_owner, {
-		name: event.target.name.value,
-		passport: event.target.passport.value
-	})
+	api.ownerAdd({name: event.target.name.value, passport: event.target.passport.value})
     .then(res => {
 		this.setState({
 		  owners: this.state.owners.concat([res.data])
@@ -48,6 +40,7 @@ class Owner extends Component {
   render() {
     return (
 		<div>
+		  <h2>Owners</h2>
 		  <OwnerList owners={this.state.owners} />
 	      <OwnerForm onAddOwner={this.handleOnAddOwner.bind(this)} />
 		</div>

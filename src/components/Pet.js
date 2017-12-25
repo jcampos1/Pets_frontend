@@ -2,29 +2,44 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import PetList from '../components/PetList'
 import PetForm from '../components/PetForm'
+import api from '../components/api'
 import { Route, Link } from 'react-router-dom';
-
-import logo from '../logo.svg';
-import '../App.css';
-
-const api_pet = "http://127.0.0.1:8000/api/pets/";
 
 class Pet extends Component {
 	
   constructor() {
     super();
     this.state = {
-      pets: [
-      ]
+      pets: [],
+	  owners: [],
+	  foods: [],
+	  types: [
+	  { opt: "op01", label: "Gato" },
+	  { opt: "op02", label: "Perro" },
+	  { opt: "op03", label: "Loro" },
+	  { opt: "op04", label: "Que se yo" },
+	  ]
     };
   }
   
   componentDidMount() {
-	  axios.get(api_pet)
+	  api.petAll()
 	  .then(res => {
-		this.setState({
-		  pets: res.data
-		});
+		this.setState({pets: res.data});
+	  }).catch(error => {
+		console.log(error);
+	  });
+	  
+	  api.ownerAll()
+	  .then(res => {
+		this.setState({owners: res.data});
+	  }).catch(error => {
+		console.log(error);
+	  });
+	  
+	  api.foodAll()
+	  .then(res => {
+		this.setState({ foods: res.data });
 	  }).catch(error => {
 		console.log(error);
 	  });
@@ -32,13 +47,14 @@ class Pet extends Component {
   
   handleOnAddPet (event) {
     event.preventDefault();
-	axios.post(api_pet, {
-		name: event.target.name.value
+	api.petAdd({
+		name: event.target.name.value,
+		owner: event.target.owner.value,
+		food: event.target.food.value,
+		type: event.target.type.value
 	})
     .then(res => {
-		this.setState({
-		  pets: this.state.pets.concat([res.data])
-		});
+		this.setState({pets: this.state.pets.concat([res.data])});
     }).catch(error => {
 		console.log(error);
 	});
@@ -47,8 +63,13 @@ class Pet extends Component {
   render() {
     return (
 		<div>
+		  <h2>Pets</h2>
 		  <PetList pets={this.state.pets} />
-	      <PetForm onAddPet={this.handleOnAddPet.bind(this)} />
+	      <PetForm 
+		  owners={this.state.owners} 
+		  foods={this.state.foods}
+		  types={this.state.types}
+		  onAddPet={this.handleOnAddPet.bind(this)} />
 		</div>
     );
   }

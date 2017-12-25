@@ -6,7 +6,7 @@ class OwnerList extends Component {
         <ul>
           {this.props.owners.map(item => {
             return (
-				<li>{item.name} | {item.passport}</li>
+				<li>Name: <i>{item.name}</i></li>
             );
           })}
         </ul>

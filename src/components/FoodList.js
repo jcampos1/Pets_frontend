@@ -6,7 +6,7 @@ class FoodList extends Component {
         <ul>
           {this.props.foods.map(item => {
             return (
-				<li>{item.name}</li>
+				<li>Name: <i>{item.name}</i></li>
             );
           })}
         </ul>

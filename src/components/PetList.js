@@ -6,7 +6,7 @@ class PetList extends Component {
         <ul>
           {this.props.pets.map(item => {
             return (
-				<li>{item.name} | {item.type}</li>
+				<li>Name: <i>{item.name}</i></li>
             );
           })}
         </ul>
